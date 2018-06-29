@@ -1,0 +1,32 @@
+---
+title: "PreProcessing"
+author: "Bruno Carlin"
+date: "29/06/2018"
+output: html_document
+---
+
+```{python pYTHON}
+import pandas as py
+import matplotlib as plt
+import pandas as pd
+```
+
+
+
+```{python}
+X = r.dataset.iloc[:,:-1].values
+y = r.dataset.iloc[:,3]
+```
+
+
+```{r, echo=FALSE, background= T}
+X <- py$X
+Y <- py$y
+```
+
+
+
+
+
+
+
