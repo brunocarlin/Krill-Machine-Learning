@@ -14,16 +14,13 @@ library(reticulate)
 ```
 
 ```{python pYTHON}
+
 import pandas as py
 import matplotlib as plt
 import pandas as pd
-<<<<<<< HEAD
-``` 
-=======
-```
-k
 
->>>>>>> 5d1bff901e08c662c046aac91297ade4d2b225ae
+``` 
+
 
 ```{python}
 dataset = pd.read_csv('Data.csv')
@@ -37,6 +34,7 @@ X <- py$X
 Y <- py$y
 dataset = py$dataset
 ```
+
 
 ```{python}
 from sklearn.preprocessing import Imputer
@@ -57,7 +55,7 @@ print(X)
 
 
 ```{r}
-<<<<<<< HEAD
+
 dataset$Age <-
   ifelse(is.na(dataset$Age),
          ave(
@@ -66,17 +64,11 @@ dataset$Age <-
              mean(x, na.rm = T)
          ),
          dataset$Age)
-
-NA2mean <- function(x)
-  replace(x, is.na(x), mean(x, na.rm = TRUE))
-dataset <- replace(dataset, TRUE, lapply(dataset, NA2mean))
-=======
+         
 dataset$Age <- ifelse(is.na(dataset$Age),ave(dataset$Age, FUN = function(x) mean(x, na.rm = T)),dataset$Age)
 
 NA2mean <- function(x) replace(x, is.na(x), mean(x, na.rm = TRUE))
 dataset<- replace(dataset, TRUE, lapply(dataset, NA2mean))
->>>>>>> 5d1bff901e08c662c046aac91297ade4d2b225ae
-
 ```
 
 
