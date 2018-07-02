@@ -43,11 +43,12 @@ y = dataset.iloc[:,3]
 
 ## R
 ```{r, echo=FALSE, background= T}
-
-
 X <- py$X
 y <- py$y
 dataset = py$dataset
+
+#OR
+dataset = read.csv('Data.csv')
 ```
 
 
