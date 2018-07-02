@@ -3,16 +3,25 @@ title: "PreProcessing"
 author: "Bruno Carlin"
 date: "29/06/2018"
 output:
-  html_document: default
-  pdf_document: default
+  html_document:
+    toc: true # table of content true
+    toc_depth: 3  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: united  # many options for theme, this one is my favorite.
+    highlight: tango  # specifies the syntax highlighting style
 ---
 
 # Importing the libraries
 
+## R
 ```{r}
 library(reticulate)
+library(caTools)
+set.seed(123)
 ```
 
+
+## Python
 ```{python pYTHON}
 
 import pandas as py
@@ -21,40 +30,40 @@ import pandas as pd
 
 ``` 
 
+# Importing the dataset
 
+## Python
+
+Requires the dataset to be in the same folder
 ```{python}
 dataset = pd.read_csv('Data.csv')
 X = dataset.iloc[:,:-1].values
 y = dataset.iloc[:,3]
 ```
 
-
+## R
 ```{r, echo=FALSE, background= T}
+
+
 X <- py$X
-Y <- py$y
+y <- py$y
 dataset = py$dataset
 ```
 
 
-```{python}
+
+# Taking care of missing data
+
+## Python
+```{python Python method }
 from sklearn.preprocessing import Imputer
 imputer = Imputer(missing_values = 'NaN',strategy = 'mean',axis = 0)
 imputer = imputer.fit(X[:,1:3])
 X[:,1:3] = imputer.transform(X[:,1:3])
-print(X)
 ```
 
-```{python}
-from sklearn.preprocessing import Imputer
-imputer = Imputer(missing_values = 'NaN',strategy = 'mean',axis = 0)
-imputer = imputer.fit(X[:,1:3])
-X[:,1:3] = imputer.transform(X[:,1:3])
-print(X)
-```
-
-
-
-```{r}
+## R
+```{r R Method}
 
 dataset$Age <-
   ifelse(is.na(dataset$Age),
@@ -70,6 +79,89 @@ dataset$Age <- ifelse(is.na(dataset$Age),ave(dataset$Age, FUN = function(x) mean
 NA2mean <- function(x) replace(x, is.na(x), mean(x, na.rm = TRUE))
 dataset<- replace(dataset, TRUE, lapply(dataset, NA2mean))
 ```
+
+
+# Encoding categorical data(As Factor should work IMHO)
+
+## Python
+```{python}
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+labelencoder_X = LabelEncoder()
+X[:,0]=labelencoder_X.fit_transform(X[:,0])
+onehotencoder=OneHotEncoder(categorical_features=[0])
+X=onehotencoder.fit_transform(X).toarray()
+
+labelencoder_y = LabelEncoder()
+y =labelencoder_y.fit_transform(y)
+```
+
+## R
+
+```{r}
+dataset$Country <-
+  factor(
+    dataset$Country,
+    levels = c('France', 'Spain', 'Germany'),
+    labels = c(1, 2, 3)
+  )
+
+#Works as well
+dataset$Purchased <-
+  factor(dataset$Purchased,
+         levels = c('No', 'Yes'),
+         labels = c(0, 1))
+```
+
+# Spliting the dataset into the Training set and Test set
+
+## Python
+
+```{python}
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size = 0.2,random_state = 0)
+```
+
+## R
+
+###library(caTools)
+
+```{r}
+#library(caTools)
+set.seed(123)
+split = sample.split(dataset$Purchased, SplitRatio = 0.8)
+training.set = subset(dataset, split == T)
+test.set = subset(dataset, split == FALSE)
+```
+
+
+
+
+# Feature Scaling
+
+## Python
+
+```{python}
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+```
+
+## R
+
+```{r}
+training.set[2:3] = scale(training.set[,2:3])
+test.set[2:3] = scale(test.set[,2:3])
+```
+
+
+
+
+
+
+
+
+
 
 
 
