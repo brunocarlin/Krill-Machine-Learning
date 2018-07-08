@@ -1,5 +1,5 @@
 ---
-title: "Simple Linear Regression"
+title: "Simple.Linear.Regression"
 author: "Bruno Carlin"
 date: "07/07/2018"
 output:
@@ -16,7 +16,7 @@ output:
 ## R
 
 ```{r setup, include=FALSE}
-knitr::opts_knit$set(root.dir = normalizePath("~/TCC/R/Krill-Machine-Learning/Machine Learning A-Z Template Folder/Part 1 - Data Preprocessing/Data_Preprocessing"))
+knitr::opts_knit$set(root.dir = normalizePath("~/TCC/R/Krill-Machine-Learning/Machine Learning A-Z Template Folder/Part 2 - Regression/Section 4 - Simple Linear Regression"))
 ```
 
 ```{r}
@@ -30,7 +30,7 @@ set.seed(123)
 ```{python pYTHON}
 
 import pandas as py
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 
 ``` 
@@ -41,9 +41,9 @@ import pandas as pd
 
 Requires the dataset to be in the same folder
 ```{python}
-dataset = pd.read_csv('Data.csv')
+dataset = pd.read_csv('SalaryData.csv')
 X = dataset.iloc[:,:-1].values
-y = dataset.iloc[:,3]
+y = dataset.iloc[:,1].values
 ```
 
 ## R
@@ -53,19 +53,7 @@ y <- py$y
 dataset = py$dataset
 
 #OR
-dataset = read.csv('Data.csv')
-```
-
-
-
-# Taking care of missing data
-
-## Python
-```{python Python method }
-from sklearn.preprocessing import Imputer
-imputer = Imputer(missing_values = 'NaN',strategy = 'mean',axis = 0)
-imputer = imputer.fit(X[:,1:3])
-X[:,1:3] = imputer.transform(X[:,1:3])
+dataset = read.csv('SalaryData.csv')
 ```
 
 
@@ -75,7 +63,8 @@ X[:,1:3] = imputer.transform(X[:,1:3])
 
 ```{python}
 from sklearn.model_selection import train_test_split
-X_train,X_test,y_train,y_test = train_test_split(X,y,test_size = 0.2,random_state = 0)
+X_train,X_test,y_train,y_test = train_test_split(
+X,y,test_size = 1/3,random_state = 0)
 ```
 
 ## R
@@ -85,9 +74,9 @@ X_train,X_test,y_train,y_test = train_test_split(X,y,test_size = 0.2,random_stat
 ```{r}
 #library(caTools)
 set.seed(123)
-split = sample.split(dataset$Purchased, SplitRatio = 0.8)
-training.set = subset(dataset, split == T)
-test.set = subset(dataset, split == FALSE)
+split = sample.split(dataset$Salary, SplitRatio = 2/3)
+training_set = subset(dataset, split == TRUE)
+test_set = subset(dataset, split == FALSE)
 ```
 
 
@@ -97,16 +86,108 @@ test.set = subset(dataset, split == FALSE)
 
 ## Python
 
-<!-- ```{python} -->
-<!-- from sklearn.preprocessing import StandardScaler -->
-<!-- sc_X = StandardScaler() -->
-<!-- X_train = sc_X.fit_transform(X_train) -->
-<!-- X_test = sc_X.transform(X_test) -->
-<!-- ``` -->
+```{python eval=FALSE, include=FALSE}
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+```
 
 ## R
 
-# ```{r}
-# training.set[2:3] = scale(training.set[,2:3])
-# test.set[2:3] = scale(test.set[,2:3])
-# ```
+```{r eval=FALSE, include=FALSE}
+ training.set[2:3] = scale(training.set[,2:3])
+ test.set[2:3] = scale(test.set[,2:3])
+```
+
+# Fitting Simple Linear Regression to the Training set
+
+## Python
+```{python}
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+```
+
+## R
+
+```{r}
+regressor = lm(formula = Salary ~ YearsExperience,
+               data = training_set)
+```
+
+# Predicting the Test set results
+
+## Python
+
+
+```{python}
+y_pred = regressor.predict(X_test)
+```
+
+
+## R
+
+```{r}
+y_pred = predict(regressor, newdata = test_set)
+```
+
+
+# Visualising the Training set results
+
+## Python 
+```{python eval=FALSE, include=FALSE}
+plt.scatter(X_train, y_train, color = 'red')
+plt.plot(X_train, regressor.predict(X_train), color = 'blue')
+plt.title('Salary vs Experience (Training set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.show()
+```
+
+## R
+
+
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_point(aes(x = training_set$YearsExperience, y = training_set$Salary),
+             colour = 'red') +
+  geom_line(aes(x = training_set$YearsExperience, y = predict(regressor, newdata = training_set)),
+            colour = 'blue') +
+  ggtitle('Salary vs Experience (Training set)') +
+  xlab('Years of experience') +
+  ylab('Salary')
+```
+
+# Visualising the Test set results
+
+
+## Python
+
+
+```{python eval=FALSE, include=FALSE}
+plt.scatter(X_test, y_test, color = 'red')
+plt.plot(X_train, regressor.predict(X_train), color = 'blue')
+plt.title('Salary vs Experience (Test set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.show()
+```
+
+##  R
+
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_point(aes(x = test_set$YearsExperience, y = test_set$Salary),
+             colour = 'red') +
+  geom_line(aes(x = training_set$YearsExperience, y = predict(regressor, newdata = training_set)),
+            colour = 'blue') +
+  ggtitle('Salary vs Experience (Test set)') +
+  xlab('Years of experience') +
+  ylab('Salary')
+```
+
+
+
