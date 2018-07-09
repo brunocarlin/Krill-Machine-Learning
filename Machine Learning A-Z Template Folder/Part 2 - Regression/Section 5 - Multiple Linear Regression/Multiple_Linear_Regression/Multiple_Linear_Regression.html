@@ -365,11 +365,15 @@ $(document).ready(function () {
 <li><a href="#splitting-the-dataset-into-the-training-set-and-test-set"><span class="toc-section-number">2.4</span> Splitting the dataset into the Training set and Test set</a></li>
 <li><a href="#fitting-multiple-linear-regression-to-the-training-set"><span class="toc-section-number">2.5</span> Fitting Multiple Linear Regression to the Training set</a></li>
 <li><a href="#predicting-the-test-set-results"><span class="toc-section-number">2.6</span> Predicting the Test set results</a></li>
-<li><a href="#automatic-selection"><span class="toc-section-number">2.7</span> Automatic selection</a></li>
+<li><a href="#building-the-optimal-model-using-backward-elimination"><span class="toc-section-number">2.7</span> Building the optimal model using Backward Elimination</a></li>
+<li><a href="#automatic-selection"><span class="toc-section-number">2.8</span> Automatic selection</a></li>
 </ul></li>
 <li><a href="#r"><span class="toc-section-number">3</span> R</a><ul>
 <li><a href="#importing-the-dataset-1"><span class="toc-section-number">3.1</span> Importing the dataset</a></li>
-<li><a href="#splitting-the-dataset-into-the-training-set-and-test-set-1"><span class="toc-section-number">3.2</span> Splitting the dataset into the Training set and Test set</a></li>
+<li><a href="#encoding-categorical-data-1"><span class="toc-section-number">3.2</span> Encoding categorical data</a></li>
+<li><a href="#splitting-the-dataset-into-the-training-set-and-test-set-1"><span class="toc-section-number">3.3</span> Splitting the dataset into the Training set and Test set</a></li>
+<li><a href="#fittiing-multiple-linear-regression-to-the-training-set"><span class="toc-section-number">3.4</span> Fittiing Multiple Linear Regression to the Training set</a></li>
+<li><a href="#predicting-the-test-set-results-1"><span class="toc-section-number">3.5</span> Predicting the Test set Results</a></li>
 </ul></li>
 </ul>
 </div>
@@ -418,7 +422,9 @@ $(document).ready(function () {
 <div id="predicting-the-test-set-results" class="section level2">
 <h2><span class="header-section-number">2.6</span> Predicting the Test set results</h2>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb7-1" data-line-number="1">y_pred <span class="op">=</span> regressor.predict(X_test)</a></code></pre></div>
-<p>##Building the optimal model using Backward Elimination</p>
+</div>
+<div id="building-the-optimal-model-using-backward-elimination" class="section level2">
+<h2><span class="header-section-number">2.7</span> Building the optimal model using Backward Elimination</h2>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> sm</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">X <span class="op">=</span> np.append(arr <span class="op">=</span> np.ones((<span class="dv">50</span>,<span class="dv">1</span>)).astype(<span class="bu">int</span>),values <span class="op">=</span> X ,axis <span class="op">=</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">X_opt <span class="op">=</span> X[:,[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]]</a>
@@ -441,7 +447,7 @@ $(document).ready(function () {
 <a class="sourceLine" id="cb8-20" data-line-number="20">regressor_OLS.summary()</a></code></pre></div>
 </div>
 <div id="automatic-selection" class="section level2">
-<h2><span class="header-section-number">2.7</span> Automatic selection</h2>
+<h2><span class="header-section-number">2.8</span> Automatic selection</h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> sm</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">def</span> backwardElimination(x, SL):</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">    numVars <span class="op">=</span> <span class="bu">len</span>(x[<span class="dv">0</span>])</a>
@@ -475,8 +481,8 @@ $(document).ready(function () {
 ## Dep. Variable:                      y   R-squared:                       0.950
 ## Model:                            OLS   Adj. R-squared:                  0.948
 ## Method:                 Least Squares   F-statistic:                     450.8
-## Date:                Mon, 09 Jul 2018   Prob (F-statistic):           2.16e-31
-## Time:                        04:07:31   Log-Likelihood:                -525.54
+## Date:                Sun, 29 Jul 2018   Prob (F-statistic):           2.16e-31
+## Time:                        18:49:23   Log-Likelihood:                -525.54
 ## No. Observations:                  50   AIC:                             1057.
 ## Df Residuals:                      47   BIC:                             1063.
 ## Df Model:                           2                                         
@@ -506,13 +512,129 @@ $(document).ready(function () {
 <h2><span class="header-section-number">3.1</span> Importing the dataset</h2>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">dataset =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">'50_Startups.csv'</span>)</a></code></pre></div>
 </div>
+<div id="encoding-categorical-data-1" class="section level2">
+<h2><span class="header-section-number">3.2</span> Encoding categorical data</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">dataset<span class="op">$</span>State =<span class="st"> </span><span class="kw">factor</span>(</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">  dataset<span class="op">$</span>State,</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">  <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">'New York'</span>, <span class="st">'California'</span>, <span class="st">'Florida'</span>),</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">  <span class="dt">labels =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">)</a></code></pre></div>
+</div>
 <div id="splitting-the-dataset-into-the-training-set-and-test-set-1" class="section level2">
-<h2><span class="header-section-number">3.2</span> Splitting the dataset into the Training set and Test set</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">library</span>(caTools)</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">split =<span class="st"> </span><span class="kw">sample.split</span>(dataset[,<span class="dv">1</span>], <span class="dt">SplitRatio =</span> <span class="fl">0.8</span>)</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">training_set =<span class="st"> </span><span class="kw">subset</span>(dataset, split <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">test_set =<span class="st"> </span><span class="kw">subset</span>(dataset, split <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)</a></code></pre></div>
+<h2><span class="header-section-number">3.3</span> Splitting the dataset into the Training set and Test set</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">library</span>(caTools)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">split =<span class="st"> </span><span class="kw">sample.split</span>(dataset<span class="op">$</span>Profit, <span class="dt">SplitRatio =</span> <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">training_set =<span class="st"> </span><span class="kw">subset</span>(dataset, split <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">test_set =<span class="st"> </span><span class="kw">subset</span>(dataset, split <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)</a></code></pre></div>
+</div>
+<div id="fittiing-multiple-linear-regression-to-the-training-set" class="section level2">
+<h2><span class="header-section-number">3.4</span> Fittiing Multiple Linear Regression to the Training set</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">regressor &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> Profit <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> training_set)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw">summary</span>(regressor)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Profit ~ ., data = training_set)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -33128  -4865      5   6098  18065 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      4.965e+04  7.637e+03   6.501 1.94e-07 ***
+## R.D.Spend        7.986e-01  5.604e-02  14.251 6.70e-16 ***
+## Administration  -2.942e-02  5.828e-02  -0.505    0.617    
+## Marketing.Spend  3.268e-02  2.127e-02   1.537    0.134    
+## State2           1.213e+02  3.751e+03   0.032    0.974    
+## State3           2.376e+02  4.127e+03   0.058    0.954    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 9908 on 34 degrees of freedom
+## Multiple R-squared:  0.9499, Adjusted R-squared:  0.9425 
+## F-statistic:   129 on 5 and 34 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="predicting-the-test-set-results-1" class="section level2">
+<h2><span class="header-section-number">3.5</span> Predicting the Test set Results</h2>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">y_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(regressor, <span class="dt">newdata =</span> test_set)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="co">#or</span></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<pre><code>## -- Attaching packages --------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --</code></pre>
+<pre><code>## v ggplot2 3.0.0     v purrr   0.2.5
+## v tibble  1.4.2     v dplyr   0.7.6
+## v tidyr   0.8.1     v stringr 1.3.1
+## v readr   1.1.1     v forcats 0.3.0</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------------------------------------------------------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">Y_Pred &lt;-<span class="st"> </span>regressor <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict</span>(test_set)</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="co">#Even better</span></a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">Y_Optimal_Pred &lt;-<span class="st"> </span>regressor <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">step</span>() <span class="op">%&gt;%</span><span class="kw">predict</span>(test_set)</a></code></pre></div>
+<pre><code>## Start:  AIC=741.59
+## Profit ~ R.D.Spend + Administration + Marketing.Spend + State
+## 
+##                   Df  Sum of Sq        RSS    AIC
+## - State            2 3.2840e+05 3.3380e+09 737.59
+## - Administration   1 2.5011e+07 3.3627e+09 739.88
+## &lt;none&gt;                          3.3377e+09 741.59
+## - Marketing.Spend  1 2.3183e+08 3.5695e+09 742.27
+## - R.D.Spend        1 1.9937e+10 2.3275e+10 817.27
+## 
+## Step:  AIC=737.59
+## Profit ~ R.D.Spend + Administration + Marketing.Spend
+## 
+##                   Df  Sum of Sq        RSS    AIC
+## - Administration   1 2.4755e+07 3.3627e+09 735.89
+## &lt;none&gt;                          3.3380e+09 737.59
+## - Marketing.Spend  1 2.5313e+08 3.5911e+09 738.51
+## - R.D.Spend        1 2.0599e+10 2.3937e+10 814.39
+## 
+## Step:  AIC=735.89
+## Profit ~ R.D.Spend + Marketing.Spend
+## 
+##                   Df  Sum of Sq        RSS    AIC
+## &lt;none&gt;                          3.3627e+09 735.89
+## - Marketing.Spend  1 3.1338e+08 3.6761e+09 737.45
+## - R.D.Spend        1 2.3344e+10 2.6706e+10 816.77</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co">#Also works</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">backwardElimination &lt;-<span class="st"> </span><span class="cf">function</span>(x, sl) {</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">  numVars =<span class="st"> </span><span class="kw">length</span>(x)</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span>numVars)){</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">    regressor =<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> Profit <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> x)</a>
+<a class="sourceLine" id="cb22-7" data-line-number="7">    maxVar =<span class="st"> </span><span class="kw">max</span>(<span class="kw">coef</span>(<span class="kw">summary</span>(regressor))[<span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span>numVars), <span class="st">&quot;Pr(&gt;|t|)&quot;</span>])</a>
+<a class="sourceLine" id="cb22-8" data-line-number="8">    <span class="cf">if</span> (maxVar <span class="op">&gt;</span><span class="st"> </span>sl){</a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">      j =<span class="st"> </span><span class="kw">which</span>(<span class="kw">coef</span>(<span class="kw">summary</span>(regressor))[<span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span>numVars), <span class="st">&quot;Pr(&gt;|t|)&quot;</span>] <span class="op">==</span><span class="st"> </span>maxVar)</a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">      x =<span class="st"> </span>x[, <span class="op">-</span>j]</a>
+<a class="sourceLine" id="cb22-11" data-line-number="11">    }</a>
+<a class="sourceLine" id="cb22-12" data-line-number="12">    numVars =<span class="st"> </span>numVars <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb22-13" data-line-number="13">  }</a>
+<a class="sourceLine" id="cb22-14" data-line-number="14">  <span class="kw">return</span>(<span class="kw">summary</span>(regressor))</a>
+<a class="sourceLine" id="cb22-15" data-line-number="15">}</a>
+<a class="sourceLine" id="cb22-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb22-17" data-line-number="17">SL =<span class="st"> </span><span class="fl">0.05</span></a>
+<a class="sourceLine" id="cb22-18" data-line-number="18">dataset =<span class="st"> </span>dataset[, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)]</a>
+<a class="sourceLine" id="cb22-19" data-line-number="19"><span class="kw">backwardElimination</span>(training_set, SL)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Profit ~ ., data = x)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -34334  -4894   -340   6752  17147 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 4.902e+04  2.748e+03   17.84   &lt;2e-16 ***
+## R.D.Spend   8.563e-01  3.357e-02   25.51   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 9836 on 38 degrees of freedom
+## Multiple R-squared:  0.9448, Adjusted R-squared:  0.9434 
+## F-statistic: 650.8 on 1 and 38 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 

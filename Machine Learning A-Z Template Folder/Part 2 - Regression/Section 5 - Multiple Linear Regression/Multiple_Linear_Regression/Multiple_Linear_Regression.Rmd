@@ -13,7 +13,7 @@ output:
 
 # Importing the libraries
 ```{r setup, include=FALSE}
-knitr::opts_knit$set(root.dir = normalizePath("~/TCC/R/Krill-Machine-Learning/Machine Learning A-Z Template Folder/Part 2 - Regression/Section 5 - Multiple Linear Regression"))
+knitr::opts_knit$set(root.dir = normalizePath("~/R.Stuff/Krill-Machine-Learning/Machine Learning A-Z Template Folder/Part 2 - Regression/Section 5 - Multiple Linear Regression"))
 ```
 
 ```{r R Library}
@@ -59,18 +59,6 @@ X = X[:,1:]
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 ```
-
-
-```{python eval=FALSE, include=FALSE}
-# Feature Scaling
-"""from sklearn.preprocessing import StandardScaler
-sc_X = StandardScaler()
-X_train = sc_X.fit_transform(X_train)
-X_test = sc_X.transform(X_test)
-sc_y = StandardScaler()
-y_train = sc_y.fit_transform(y_train)"""
-```
-
 
 ## Fitting Multiple Linear Regression to the Training set
 
@@ -154,23 +142,64 @@ X_Modeled = backwardElimination(X_opt, SL)
 dataset = read.csv('50_Startups.csv')
 ```
 
+## Encoding categorical data
+```{r}
+dataset$State = factor(
+  dataset$State,
+  levels = c('New York', 'California', 'Florida'),
+  labels = c(1, 2, 3)
+)
+```
+
+
 ## Splitting the dataset into the Training set and Test set
-
-
 
 ```{r}
 library(caTools)
 set.seed(123)
-split = sample.split(dataset[,1], SplitRatio = 0.8)
+split = sample.split(dataset$Profit, SplitRatio = 0.8)
 training_set = subset(dataset, split == TRUE)
 test_set = subset(dataset, split == FALSE)
 ```
 
 
-```{r eval=FALSE, include=FALSE}
-# Feature Scaling
-# training_set = scale(training_set)
-# test_set = scale(test_set)
+## Fittiing Multiple Linear Regression to the Training set
+
+```{r}
+regressor <- lm(formula = Profit ~ ., data = training_set)
+summary(regressor)
 ```
 
+
+## Predicting the Test set Results
+
+```{r}
+y_pred <- predict(regressor, newdata = test_set)
+#or
+library(tidyverse)
+Y_Pred <- regressor %>% predict(test_set)
+
+#Even better
+Y_Optimal_Pred <- regressor %>% step() %>%predict(test_set)
+
+#Also works
+
+backwardElimination <- function(x, sl) {
+  numVars = length(x)
+  for (i in c(1:numVars)){
+    regressor = lm(formula = Profit ~ ., data = x)
+    maxVar = max(coef(summary(regressor))[c(2:numVars), "Pr(>|t|)"])
+    if (maxVar > sl){
+      j = which(coef(summary(regressor))[c(2:numVars), "Pr(>|t|)"] == maxVar)
+      x = x[, -j]
+    }
+    numVars = numVars - 1
+  }
+  return(summary(regressor))
+}
+
+SL = 0.05
+dataset = dataset[, c(1,2,3,4,5)]
+backwardElimination(training_set, SL)
+```
 
