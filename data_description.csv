@@ -1,0 +1,3 @@
+"","Type","No.of Non-Missing Values","Missing Values","Distinct Values","Minimum","Maximum","Mean","Median"
+"YearsExperience","numeric",30,0,28,1.1,10.5,5.31333333333333,4.7
+"Salary","numeric",30,0,30,37731,122391,76003,65237

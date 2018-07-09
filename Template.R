@@ -2,6 +2,8 @@
 
 library(reticulate)
 library(caTools)
+library(devtools)
+library(githubinstall)
 set.seed(123)
 
 # Importing the dataset
@@ -17,5 +19,11 @@ test.set = subset(dataset, split == FALSE)
 
 # Feature Scaling
 
+githubinstall::gh_install_packages("reticulate")
+
+githubinstall("rstudio/reticulate")
 # training.set[2:3] = scale(training.set[,2:3])
 # test.set[2:3] = scale(test.set[,2:3])
+
+
+gh_install_packages("rstudio")

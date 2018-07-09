@@ -4,24 +4,18 @@ library(devtools)
 Sys.setenv(LANG = "en")
 
 
-devtools::install("basictemplate")
-
-
-install_github(c("brunocarlin/Templater", "brunocarlin/basictemplate"))
 
 R.Version()
 
 update.packages()
 
 
+install.packages("“https://raw.githubusercontent.com/pradeepmav/data_description_function/master/data_description.R”")
+
 if(!require(installr)) {
   install.packages("installr"); require(installr)} #load / install+load installr
 
-# using the package:
 updateR()
 
-githubinstall("Templater")
-
-gh_list_packages("brunocarlin")
-
-gh_install_packages("basictemplate")
+source("https://raw.githubusercontent.com/pradeepmav/data_description_function/master/data_description.R")
+k <- data_description("dataset")
