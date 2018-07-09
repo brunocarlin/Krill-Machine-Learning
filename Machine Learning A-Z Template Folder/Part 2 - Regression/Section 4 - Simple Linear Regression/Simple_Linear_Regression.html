@@ -433,7 +433,7 @@ $(document).ready(function () {
 <p>###library(caTools)</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">#library(caTools)</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">split =<span class="st"> </span><span class="kw">sample.split</span>(dataset<span class="op">$</span>Salary, <span class="dt">SplitRatio =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">split =<span class="st"> </span><span class="kw">sample.split</span>(dataset[,<span class="dv">1</span>], <span class="dt">SplitRatio =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">training_set =<span class="st"> </span><span class="kw">subset</span>(dataset, split <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">test_set =<span class="st"> </span><span class="kw">subset</span>(dataset, split <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
