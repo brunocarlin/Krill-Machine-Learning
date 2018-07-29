@@ -1,0 +1,245 @@
+---
+title: "Polynomial Regression"
+author: "Bruno Carlin"
+date: "29/07/2018"
+output:
+  html_document:
+    toc: true # table of content true
+    toc_depth: 3  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: united  # many options for theme, this one is my favorite.
+    highlight: tango  # specifies the syntax highlighting style
+---
+# Importing the libraries
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath("~/R.Stuff/Krill-Machine-Learning/Machine Learning A-Z Template Folder/Part 2 - Regression/Section 6 - Polynomial Regression/Polynomial Regression"))
+```
+
+```{r R Library}
+library(reticulate)
+library(caTools)
+library(tidyverse)
+set.seed(123)
+```
+
+
+```{python Pythom Library}
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = '/Users/Anton/Anaconda3/Library/plugins/platforms'
+```
+
+
+# Python
+
+## Importing the dataset
+
+
+```{python}
+dataset = pd.read_csv('Position_Salaries.csv')
+X = dataset.iloc[:, 1:2].values
+y = dataset.iloc[:, 2].values
+```
+
+## Fitting the Regression Model to the dataset
+
+### Fitting Linear Regression to the dataset
+
+```{python}
+from sklearn.linear_model import LinearRegression
+lin_reg = LinearRegression()
+lin_reg.fit(X, y)
+```
+
+### Fitting Polynomial Regression to the dataset
+
+```{python}
+from sklearn.preprocessing import PolynomialFeatures
+poly_reg = PolynomialFeatures(degree = 4)
+X_poly = poly_reg.fit_transform(X)
+poly_reg.fit(X_poly, y)
+lin_reg_2 = LinearRegression()
+lin_reg_2.fit(X_poly, y)
+```
+
+## Visualising the Regression Models
+
+### Visualising the Linear Regression results
+
+```{python}
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg.predict(X), color = 'blue')
+plt.title('Truth or Bluff (Linear Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+plt.close()
+```
+
+### Visualising the Polynomial Regression results
+
+```{python}
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg_2.predict(poly_reg.fit_transform(X)), color = 'blue')
+plt.title('Truth or Bluff (Polynomial Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+plt.close()
+```
+
+### Combined
+
+```{python}
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg.predict(X), color = 'blue')
+plt.title('Truth or Bluff (Linear Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+
+plt.scatter(X, y, color = 'red')
+plt.plot(X, lin_reg_2.predict(poly_reg.fit_transform(X)), color = 'blue')
+plt.title('Truth or Bluff (Polynomial Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+plt.close()
+```
+
+## Visualising the Polynomial Regression results (for higher resolution and smoother curve)
+
+```{python}
+X_grid = np.arange(min(X), max(X), 0.1)
+X_grid = X_grid.reshape((len(X_grid), 1))
+plt.scatter(X, y, color = 'red')
+plt.plot(X_grid, lin_reg_2.predict(poly_reg.fit_transform(X_grid)), color = 'blue')
+plt.title('Truth or Bluff (Polynomial Regression)')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+```
+
+## Predicting a new result with Linear Regression
+
+```{python}
+lin_reg.predict(6.5)
+```
+
+## Predicting a new result with Polynomial Regression
+
+```{python}
+lin_reg_2.predict(poly_reg.fit_transform(6.5))
+```
+
+
+# R
+
+## Importing the dataset
+```{r}
+dataset = read.csv('Position_Salaries.csv')
+dataset = dataset[2:3]
+```
+
+
+## Fitting Linear Regression to the dataset
+
+```{r}
+lin_reg <- dataset %>% lm(formula = Salary ~.)
+```
+
+## Fitting Polynomial Regression to the dataset
+
+```{r}
+dataset$Level2 <- dataset$Level^2
+dataset$Level3 <- dataset$Level^3
+dataset$Level4 <- dataset$Level^4
+poly_reg <- dataset %>% lm(formula = Salary ~.)
+```
+
+## Visualising the Regression results
+
+### Visualising the Linear Regression results
+```{r}
+ggplot() +
+  geom_point(aes(x = dataset$Level, y = dataset$Salary),
+             colour = 'red') +
+  geom_line(aes(x = dataset$Level, y = predict(lin_reg, newdata = dataset)),
+            colour = 'blue') +
+  ggtitle('Truth or Bluff (Linear Regression)') +
+  xlab('Level') +
+  ylab('Salary')
+```
+
+### Visualising the Polynomial Regression results
+```{r}
+ggplot() +
+  geom_point(aes(x = dataset$Level, y = dataset$Salary),
+             colour = 'red') +
+  geom_line(aes(x = dataset$Level, y = predict(poly_reg, newdata = dataset)),
+            colour = 'blue') +
+  ggtitle('Truth or Bluff (Polynomial Regression)') +
+  xlab('Level') +
+  ylab('Salary')
+```
+
+
+###Both
+```{r}
+ggplot() +
+  geom_point(aes(x = dataset$Level, y = dataset$Salary),
+             colour = 'red') +
+  geom_line(aes(x = dataset$Level, y = predict(lin_reg, newdata = dataset)),
+            colour = 'blue') +
+  ggtitle('Truth or Bluff (Both Regressions)') +
+  xlab('Level') +
+  ylab('Salary') +
+  
+  geom_point(aes(x = dataset$Level, y = dataset$Salary),
+             colour = 'red') +
+  geom_line(aes(x = dataset$Level, y = predict(poly_reg, newdata = dataset)),
+            colour = 'blue')
+```
+
+## Visualising the Regression Model results (for higher resolution and smoother curve)
+```{r}
+x_grid = seq(min(dataset$Level), max(dataset$Level), 0.1)
+ggplot() +
+  geom_point(aes(x = dataset$Level, y = dataset$Salary),
+             colour = 'red') +
+  geom_line(aes(x = x_grid, y = predict(poly_reg,
+                                        newdata = data.frame(Level = x_grid,
+                                                             Level2 = x_grid^2,
+                                                             Level3 = x_grid^3,
+                                                             Level4 = x_grid^4))),
+            colour = 'blue') +
+  ggtitle('Truth or Bluff (Polynomial Regression)') +
+  xlab('Level') +
+  ylab('Salary')
+```
+
+## Predicting a new result with Linear Regression
+
+```{r}
+predict(lin_reg, data.frame(Level = 6.5))
+```
+
+## Predicting a new result with Polynomial Regression
+
+```{r}
+predict(poly_reg, data.frame(Level = 6.5,
+                             Level2 = 6.5^2,
+                             Level3 = 6.5^3,
+                             Level4 = 6.5^4))
+```
+
+## Predicting a new result with Polynomial Regression(Better? Can`t pipe)
+
+```{r}
+poly_reg2 = lm(Salary ~ Level + I(Level^2) + I(Level^3) + I(Level^4), data=dataset)
+
+predict(poly_reg2, data.frame(Level=6.5))
+```
+
+
